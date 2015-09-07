@@ -1,0 +1,5 @@
+#Add time measurements with sequeantial
+    Items   Sequential  Random
+    500     8418        4128
+    1000    33611       18060
+    4000    475102      176313

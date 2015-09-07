@@ -1,0 +1,5 @@
+#Lookup time measurements with sequeantial/random
+    Items   Sequential  Random
+    500     1489        1459
+    1000    3074        4755
+    4000    22415       15683

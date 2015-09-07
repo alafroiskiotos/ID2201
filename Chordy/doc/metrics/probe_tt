@@ -1,0 +1,8 @@
+## Microseconds for a probe to travel all around the ring
+   Nodes        μs
+    20          44
+    40          136
+    60          262
+    100         456
+    160         900
+    300         1850 
