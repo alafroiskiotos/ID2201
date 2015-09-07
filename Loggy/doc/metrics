@@ -1,0 +1,8 @@
+##Length of Queue in relation to number of queues
+    Messages    QueueLength
+    68          7
+    126         9
+    732         12
+    1094        14
+    5720        16
+    9226        18
