@@ -1,25 +1,37 @@
 -module(map).
--export([new/0, update/3, reachable/2, all_nodes/1, map/0]).
 
-%%map() -> [{paris, [madrid, rome]}, {madrid, [berlin]}].
-map() -> [{paris, [berlin, athens]}, {berlin, [stockholm]}, {athens, [rome]}].
+-export([new/0, update/3, reachable/2, all_nodes/1]).
 
-new() -> [].
+new() ->
+    [].
 
-update(Node, Link, Map) ->
-    TmpMap = lists:foldl(fun({LstNode, LstLink}, List) ->
-            if Node == LstNode -> List;
-                true -> lists:append(List, [{LstNode, LstLink}])
-            end
-        end, [], Map),
-        lists:append(TmpMap, [{Node, Link}]).
-
-reachable(Node, Map) ->
-    case lists:keysearch(Node, 1, Map) of
-        {_, {_, ReLink}} -> ReLink;
-        false -> []
+update(Node, Links, Map) ->
+    case lists:keyfind(Node, 1, Map) of
+	{_, _} ->
+	    lists:keyreplace(Node, 1, Map, {Node, Links});
+	false ->
+	    [{Node, Links} | Map]
     end.
 
+
+reachable(Node, Map) ->
+    case lists:keyfind(Node, 1, Map) of
+	{_Name, Links} ->
+	    Links;
+	false ->
+	    []
+    end.
+
+%% all_nodes(Map) ->
+%%     lists:umerge(lists:flatten(Map)).
+
 all_nodes(Map) ->
-    lists:usort(lists:foldl(fun({LstNode, LstLink}, Acc) -> Flat = lists:append([LstNode], LstLink),
-        lists:append(Acc, Flat) end, [], Map)).
+    all_nodes_helper(Map, []).
+
+all_nodes_helper([], Nodes) ->
+    lists:usort(Nodes);
+all_nodes_helper([{Node, Links} | Rest], Nodes) ->
+    TmpNodes = [Node | Nodes],
+    TmpNodes2 = lists:foldl(fun(X, Acc) -> [X | Acc] end, TmpNodes, Links),
+    all_nodes_helper(Rest, TmpNodes2).
+

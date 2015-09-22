@@ -1,17 +1,20 @@
 -module(hist).
+
 -export([new/1, update/3]).
 
-new(Name) -> [{Name, 0}].
+new(Name) ->
+    [{Name, 0}].
 
 update(Node, N, History) ->
-    case lists:keysearch(Node, 1, History) of
-        {_, {HisNode, HisN}} ->
-            if
-                N < HisN ->
-                    {new, lists:keyreplace(HisNode, 1, History, {Node, N})};
-                true -> old
-            end;
-        false ->
-            NewHistory = lists:append(History, new(Node)),
-            {new, NewHistory}
+    case lists:keyfind(Node, 1, History) of
+	{Node, Nh} ->
+	    case N =< Nh of
+		true ->
+		    old;
+		false ->
+		    {new, lists:keyreplace(Node, 1, History, {Node, N})}
+	    end;
+	false ->
+	    {new, [{Node, 0} | History]}
     end.
+	    
