@@ -15,7 +15,9 @@ construct(Gateways) ->
 table(Gateways, Map) ->
     NodesList = lists:foldl(construct(Gateways), [], map:all_nodes(Map)),
     Sorted = lists:keysort(2, NodesList),
-    iterate(Sorted, Map, []).
+    %% iterate(Sorted, Map, [])
+    Sorted.
+
 
 route(Node, Table) ->
     case lists:keyfind(Node, 1, Table) of
