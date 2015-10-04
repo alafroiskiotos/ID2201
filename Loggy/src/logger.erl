@@ -15,12 +15,14 @@ loop(Clock, HoldBackQ) ->
 	{log, From, Time, Msg} ->
 	    NewClock = time:update(From, Time, Clock),
 	    UpdatedHoldBackQ = [{From, Time, Msg} | HoldBackQ],
-	    NewHoldBackQ = checkQ(UpdatedHoldBackQ, NewClock, []),
+	    SortedUpHBQ = lists:keysort(2, UpdatedHoldBackQ),
+	    NewHoldBackQ = checkQ(SortedUpHBQ, NewClock, []),
 	    loop(NewClock, NewHoldBackQ);	 
 	stop ->
 	    io:format("HoldBackQ length: ~w~n", [length(HoldBackQ)]),
 	    io:format("Flushing hold-back queue~n"),
-	    lists:foreach(fun({From, Time, Msg}) -> log(From, Time, Msg) end, HoldBackQ),
+	    SortedHBQ = lists:keysort(2, HoldBackQ),
+	    lists:foreach(fun({From, Time, Msg}) -> log(From, Time, Msg) end, SortedHBQ),
 	    ok
     end.
 
