@@ -1,22 +1,19 @@
 -module(storage).
--compile(export_all).
+
+-export([create/0, add/3, lookup/2, split/3, merge/2]).
 
 create() ->
     [].
 
-add(Key, Value, Storage) ->
-    TmpS = lists:append(Storage, [{Key, Value}]),
-    lists:ukeysort(1, TmpS).
+add(Key, Value, Store) ->
+    [{Key, Value} | Store].
 
-lookup(Key, Storage) ->
-    {_, Result} = lists:keysearch(Key, 1, Storage),
-    Result.
+lookup(Key, Store) ->
+    lists:keyfind(Key, 1, Store).
 
-split(Key, Storage) ->
-    lists:splitwith(fun({SKey, _}) -> SKey =< Key end, Storage).
+split(From, To, Store) ->
+    lists:partition(fun({Key, _Value}) -> Key > From andalso Key =< To end, Store).
 
-merge(Storage0, Storage) ->
-    lists:umerge(Storage0, Storage).
-
-size(Storage) ->
-    lists:flatlength(Storage).
+merge(Entries, Store) ->
+    lists:merge(Entries, Store).
+	
